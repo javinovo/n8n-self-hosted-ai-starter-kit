@@ -49,6 +49,19 @@ x-init-ollama: &init-ollama
     - "sleep 3; ollama pull llama3.2"
 
 services:
+  doc-to-text:
+    build:
+      context: ./doc-to-text
+    image: doc-to-text:1.0.0
+    hostname: doc-to-text
+    container_name: doc-to-text
+    networks: ['demo']
+    volumes:
+      - ./shared:/data/shared
+    ports:
+      - "5000:5000"
+    working_dir: /app
+
   open-webui:
     image: ghcr.io/open-webui/open-webui:main
     networks: ['demo']
@@ -64,6 +77,7 @@ services:
   postgres:
     image: postgres:16-alpine
     hostname: postgres
+    container_name: postgres
     networks: ['demo']
     restart: unless-stopped
     environment:
